@@ -43,7 +43,8 @@ public class Simulator implements World{
         registered=new ArrayList<Actor>();
         unregistered=new ArrayList<Actor>();
         actors = new SortedCollection<Actor>();
-        actors.add(new Block(new Vector(-4,-1),new Vector(4,0)));
+        Block b = new Block(-4,-1,4,0);
+        actors.add(b);
 	}
 	
     //Simulate before the physical actions from actors
@@ -63,7 +64,7 @@ public class Simulator implements World{
 		currentCenter = currentCenter.mul(1.0 - factor).add(expectedCenter.mul(factor));
 		currentRadius = currentRadius * (1.0 - factor) + expectedRadius * factor;
 		View view = new View (input, output);
-		
+		view.setTarget(currentCenter, currentRadius);
 		preUpdate(input,output);
 		
 		for(Actor actor : actors) {
@@ -99,11 +100,7 @@ public class Simulator implements World{
 		
 		
 		view.setTarget(currentCenter, currentRadius);
-		/*Block b1=new Block(new Vector(-4,-1),new Vector(4,0));
-		Block b2=new Block(new Vector(-2,0),new Vector(-1,1));
-		b1.draw(view,view);
-		b2.draw(view,view);
-		*/
+	
 
 		if (view.getMouseButton(1).isPressed()) setView(view.getMouseLocation(), 10.0);
         
