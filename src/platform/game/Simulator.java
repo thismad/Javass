@@ -97,11 +97,6 @@ public class Simulator implements World{
 		}
 		unregistered.clear();
 		
-		
-		
-		view.setTarget(currentCenter, currentRadius);
-	
-
 		if (view.getMouseButton(1).isPressed()) setView(view.getMouseLocation(), 10.0);
         
       
