@@ -17,7 +17,14 @@ import platform.util.Output;
  * Base class of all simulated actors, attached to a world.
  */
 public abstract class Actor implements Comparable<Actor> {
+	private World world;
+	private Sprite sprite;
+	
 	private Loader loader = new BufferedLoader(new FileLoader("res/", DefaultLoader.INSTANCE));
+	
+	public Actor(String nomSprite) {
+		this.sprite=loader.getSprite(nomSprite);
+	}
   //pour évoluer au cours du temps : 
 	public void update(Input input) {}
   //pour être dessiné
@@ -49,6 +56,21 @@ public abstract class Actor implements Comparable<Actor> {
 		return null;
 	}
 	
+	protected Sprite getSprite() {
+		return sprite;
+	}
+	/**
+	 * Quand l'acteur s'enregistre dans le monde on lui définit son World
+	 * @param world
+	 */
+	public void register(World world) {
+		this.world = world;
+	}
+	
+	public void unregister(World world) {
+		world = null;
+	}
+	
 	//return position of the Actor
 	public Vector getPosition() {
 		Box box = getBox();
@@ -56,7 +78,10 @@ public abstract class Actor implements Comparable<Actor> {
 		return box.getCenter();
 	}
 	
-	abstract public void interact(Actor other);
+	protected World getWorld() {
+		return world;
+	}
+	public void interact(Actor other) {}
 	
 
 	

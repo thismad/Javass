@@ -15,13 +15,12 @@ import platform.util.View;
  */
 public class Block extends Actor{
    private Box box;
-   private Sprite sprite;
+  
    
    
    public Block(double a, double b, double c, double d) {
-	   super();
-	   this.box=new Box(new Vector(a,b),new Vector(c,d));
-	   this.sprite=getLoader().getSprite("box.empty");
+	   super("box.empty");
+	   this.box=new Box(new Vector(a,b),new Vector(c,d));  
    }
    
    public int getPriority() {
@@ -31,16 +30,16 @@ public class Block extends Actor{
    public Box getBox() {
 	   return box;
    }
-   
-   public Sprite getSprite() {
-	   return sprite;
-   }
-   
+
    public void interact(Actor actor) {}
-   
+
+   @Override
    public void draw(Input input, Output output) {
-	   View view = new View (input, output);
-	   super.draw(input,output);
-	   view.drawSprite(sprite, box);
+	   super.draw(input, output);
+	   output.drawSprite(getSprite(), getBox());
+   }
+
+   public boolean isSolid() {
+	   return true;
    }
 }

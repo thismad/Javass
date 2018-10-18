@@ -15,6 +15,7 @@ import platform.util.Vector;
 import platform.util.View;
 import platform.util.Sprite;
 import platform.game.Block;
+import platform.game.Fireball;
 
 /**
  * Basic implementation of world, managing a complete collection of actors.
@@ -45,6 +46,12 @@ public class Simulator implements World{
         actors = new SortedCollection<Actor>();
         Block b = new Block(-4,-1,4,0);
         actors.add(b);
+        Fireball f = new Fireball(3,2,-3,5);
+        f.register(this);
+        Player p = new Player(2,3,0,-1);
+        p.register(this);
+        actors.add(p);
+        actors.add(f);
 	}
 	
     //Simulate before the physical actions from actors
@@ -72,7 +79,17 @@ public class Simulator implements World{
 				if (actor.getPriority()>other.getPriority()) actor.interact(other);
 			}
 		}
-		
+		// Add registered actors
+		for (int i =0; i<registered.size();i++) {
+			Actor actor = registered.get(i);
+			actor.register(this);
+			if (!actors.contains(actor)) {
+				actors.add(actor);
+			}
+		}
+		registered.clear();
+
+
 		// Apply update
 		for( Actor a : actors) a.update(view);
 		
@@ -81,19 +98,12 @@ public class Simulator implements World{
 		
 		postUpdate(input,output); 
 		
-		// Add registered actors
-		for (int i =0; i<registered.size();i++) {
-			Actor actor = registered.get(i);
-			if (!actors.contains(actor)) {
-				actors.add(actor);
-			}
-		}
-		registered.clear();
-		
 		// Remove unregistered actors
 		for (int i=0; i<unregistered.size();i++) {
 			Actor actor = unregistered.get(i);
 			actors.remove(actor);
+			//retrait de son attribut world
+			actor.unregister(this);
 		}
 		unregistered.clear();
 		
