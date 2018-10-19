@@ -27,6 +27,9 @@ public abstract class Actor implements Comparable<Actor> {
 	}
   //pour évoluer au cours du temps : 
 	public void update(Input input) {}
+	
+	public void postUpdate(Input input, Output output) {}
+	
   //pour être dessiné
 	public void draw(Input input, Output output) {}
 	

@@ -3,6 +3,8 @@ package platform.game;
 import platform.game.level.Level;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import platform.util.Box;
 import platform.util.BufferedLoader;
 import platform.util.DefaultLoader;
@@ -29,6 +31,7 @@ public class Simulator implements World{
     private double expectedRadius = 10.0;
     private SortedCollection<Actor> actors;
     private List<Actor> registered, unregistered;
+   
     
     /**
      * Create a new simulator.
@@ -61,7 +64,10 @@ public class Simulator implements World{
 		}
 	}
 	//Simulate after the drawings
-	public void postUpdate(Input input, Output output) {
+	public void postUpdate(Input input,Output output) {
+		for (Actor a : actors) {
+			a.postUpdate(input,output);
+		}
 	}
 	/**
      * Simulate a single step of the simulation.
@@ -69,11 +75,12 @@ public class Simulator implements World{
      * @param output output object to use, not null
      */
 	public void update(Input input, Output output) {
-		double factor = 0.001;
+		double factor = 0.0001;
 		currentCenter = currentCenter.mul(1.0 - factor).add(expectedCenter.mul(factor));
 		currentRadius = currentRadius * (1.0 - factor) + expectedRadius * factor;
 		View view = new View (input, output);
 		view.setTarget(currentCenter, currentRadius);
+		
 		preUpdate(input,output);
 		
 		for(Actor actor : actors) {
@@ -108,10 +115,6 @@ public class Simulator implements World{
 			actor.unregister(this);
 		}
 		unregistered.clear();
-		
-		if (view.getMouseButton(1).isPressed()) setView(view.getMouseLocation(), 10.0);
-        
-      
 	}
 	
 	/** @Override*/

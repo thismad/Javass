@@ -39,7 +39,14 @@ public class Player extends Actor{
 		super.preUpdate(input);
 		colliding = false;
 	}
-
+	
+	public void postUpdate(Input input, Output output) {
+		super.postUpdate(input, output);
+		View view = new View(input,output);
+		view.setTarget(position, 8);
+	}
+	
+//********************************************************************** DEBUT UPDATE
 	public void update(Input input) {
 		super.update(input);
 		double maxSpeed = 4.0;
@@ -60,7 +67,7 @@ public class Player extends Actor{
 			}
 		}
 		if (input.getKeyboardButton(KeyEvent.VK_LEFT).isDown()) {
-			if (velocity.getX() < maxSpeed) {
+			if (velocity.getX() <= maxSpeed) {
 				double increase =  60.0*input.getDeltaTime();
 				double speed = velocity.getX() - increase;
 				if (speed < - maxSpeed) {
@@ -78,6 +85,7 @@ public class Player extends Actor{
 		velocity = velocity.add(getWorld().getGravity().mul(delta));
 		position = position.add(velocity.mul(delta));
 	}
+// ********************************************************************** FIN UPDATE
 
 	public void draw(Input input,Output output) {
 		super.draw(input, output);
