@@ -56,7 +56,9 @@ public class Simulator implements World{
 	
     //Simulate before the physical actions from actors
 	public void preUpdate(Input input, Output output) {
-		
+		for (Actor a : actors) {
+			a.preUpdate(input);
+		}
 	}
 	//Simulate after the drawings
 	public void postUpdate(Input input, Output output) {

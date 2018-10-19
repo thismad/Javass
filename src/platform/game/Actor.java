@@ -29,6 +29,8 @@ public abstract class Actor implements Comparable<Actor> {
 	public void update(Input input) {}
   //pour être dessiné
 	public void draw(Input input, Output output) {}
+	
+	public void preUpdate(Input input) {}
 	/**
 	 * @Override
 	 * @param other
