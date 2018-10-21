@@ -16,17 +16,25 @@ import platform.util.Sprite;
 
 public class Fireball extends Actor{
 	private Vector position;
-	private Vector vitesse;
+	private Vector velocity;
 	private final double SIZE = 0.4;
+	private Actor owner;
 	
+	public Fireball(Vector pos, Vector speed,Actor owner) {
+	    position=pos;
+	    velocity=speed;
+	    this.owner=owner;
+	}
 	public Fireball(double a,double b,double c, double d) {
-		super("fireball");
 		Vector pos = new Vector(a,b);
 		Vector vit = new Vector(c,d);
 		if (pos==null || vit==null) throw new NullPointerException();
 		position=pos;
-		this.vitesse=vit;
+		this.velocity=vit;
 	}
+	
+	
+	
 	@Override
 	public Box getBox() {
 		return new Box(position,SIZE,SIZE);
@@ -40,24 +48,29 @@ public class Fireball extends Actor{
 	public void update(Input input) {
 		super.update(input);
 		double delta= input.getDeltaTime();
-		vitesse=vitesse.add(getWorld().getGravity().mul(delta));
-		position=position.add(vitesse.mul(delta));
+		velocity=velocity.add(getWorld().getGravity().mul(delta));
+		position=position.add(velocity.mul(delta));
 	}
 
 	@Override
 	public void draw(Input input, Output output) {
 		super.draw(input,output);
-		output.drawSprite(getSprite(), getBox(), input.getTime());
+		output.drawSprite(getSprite("fireball"), getBox(), input.getTime());
 	}
 
 	@Override
 	public void interact(Actor other) {
 		super.interact(other);
+		if(other.getBox().isColliding(getBox())) {
+		    if(other.getClass()!=this.getClass() && other.hurt(this, Damage.FIRE, 1.0,getPosition())) {
+		        getWorld().unregister(this);
+		    }
+		}
 		if (other.isSolid()) {
 			Vector delta = other.getBox().getCollision(position);
 			if(delta != null) {
 				position = position.add(delta);
-				vitesse=vitesse.mirrored(delta);
+				velocity=velocity.mirrored(delta);
 			}
 		}
 	}

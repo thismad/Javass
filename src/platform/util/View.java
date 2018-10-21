@@ -28,11 +28,11 @@ public class View extends Transform {
         if (radius <= 0.0)
             throw new IllegalArgumentException();
         
-        // Get window ratio
+       //  Get window ratio
         Vector size = getOutput().getBox().getSize();
         double ratio = size.getY() / size.getX();
         
-        // Use largest dimension as reference
+       //  Use largest dimension as reference
         double length;
         Vector extent;
         if (ratio < 1.0) {
@@ -43,7 +43,7 @@ public class View extends Transform {
             extent = new Vector(radius, radius * ratio);
         }
         
-        // Compute scale and translation
+         //Compute scale and translation
         scale = 2.0 * radius / length;
         translation = center.sub(extent);
     }

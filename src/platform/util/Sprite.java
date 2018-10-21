@@ -24,9 +24,9 @@ public final class Sprite {
      */
 	public Sprite(Image image) {
 		// See
-		// http://stackoverflow.com/questions/196890/java2d-performance-issues
-		// http://stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage
-		// http://stackoverflow.com/questions/148478/java-2d-drawing-optimal-performance
+		// http:stackoverflow.com/questions/196890/java2d-performance-issues
+		// http:stackoverflow.com/questions/13605248/java-converting-image-to-bufferedimage
+		// http:stackoverflow.com/questions/148478/java-2d-drawing-optimal-performance
 		
 		// Get system graphical configuration
 		GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();

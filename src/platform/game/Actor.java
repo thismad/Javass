@@ -18,13 +18,8 @@ import platform.util.Output;
  */
 public abstract class Actor implements Comparable<Actor> {
 	private World world;
-	private Sprite sprite;
 	
-	private Loader loader = new BufferedLoader(new FileLoader("res/", DefaultLoader.INSTANCE));
 	
-	public Actor(String nomSprite) {
-		this.sprite=loader.getSprite(nomSprite);
-	}
   //pour évoluer au cours du temps : 
 	public void update(Input input) {}
 	
@@ -49,9 +44,7 @@ public abstract class Actor implements Comparable<Actor> {
 	
 	abstract public int getPriority();  
 	
-	public Loader getLoader() {
-		return loader;
-	}
+
 	//STATE
 	public boolean isSolid() {
 		return false;
@@ -61,8 +54,8 @@ public abstract class Actor implements Comparable<Actor> {
 		return null;
 	}
 	
-	protected Sprite getSprite() {
-		return sprite;
+	protected Sprite getSprite(String name) {
+	    return world.getLoader().getSprite(name);
 	}
 	/**
 	 * Quand l'acteur s'enregistre dans le monde on lui définit son World
@@ -88,6 +81,8 @@ public abstract class Actor implements Comparable<Actor> {
 	}
 	public void interact(Actor other) {}
 	
-
+	public boolean hurt(Actor instigator, Damage type, double amount, Vector location) {
+	    return false;
+	}
 	
 }

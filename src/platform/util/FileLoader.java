@@ -30,7 +30,7 @@ public class FileLoader implements Loader {
     public Sprite getSprite(String name) {
         Sprite sprite = null;
         
-        // Try each extension, until we are able to successfully read the file
+     //    Try each extension, until we are able to successfully read the file
         for (String extension : EXTENSIONS) {
             try {
                 sprite = new Sprite(prefix + name + extension);
@@ -38,7 +38,7 @@ public class FileLoader implements Loader {
             } catch (IOException e) {}
         }
         
-        // On failure, use fallback loader
+     //    On failure, use fallback loader
         if (sprite == null)
             sprite = fallback.getSprite(name);
         return sprite;

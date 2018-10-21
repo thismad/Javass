@@ -3,7 +3,7 @@ package platform.game;
 import platform.util.Box;
 import platform.util.Loader;
 import platform.util.Vector;
-
+import platform.game.level.*;
 /**
  * Represents an environment populated by actors.
  */
@@ -26,4 +26,8 @@ public interface World {
     default public Vector getGravity() {
     	return new Vector (0.0,-9.81);
     }
+    
+    public void setNextLevel(Level level);
+    
+    public void nextLevel();
 }

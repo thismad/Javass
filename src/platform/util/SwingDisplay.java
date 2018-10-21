@@ -32,7 +32,7 @@ import javax.swing.SwingUtilities;
 @SuppressWarnings("serial")
 public class SwingDisplay implements Display, KeyListener, MouseListener, MouseWheelListener {
 
-    // Encapsulates a collection of buttons
+   //  Encapsulates a collection of buttons
     private static class ButtonManager {
         
         private Map<Integer, Button> current;
@@ -60,7 +60,7 @@ public class SwingDisplay implements Display, KeyListener, MouseListener, MouseW
         }
     }
     
-    // Rendering-related objects
+   //  Rendering-related objects
     private JFrame frame;
     private Canvas canvas;
     private BufferStrategy strategy;
@@ -88,7 +88,7 @@ public class SwingDisplay implements Display, KeyListener, MouseListener, MouseW
         canvas.setIgnoreRepaint(true);
         canvas.setBackground(Color.BLACK);
         
-        // Create input buffers
+      //   Create input buffers
         deltaTime = 0.0;
         time = 0.0;
         before = System.nanoTime();
@@ -98,7 +98,7 @@ public class SwingDisplay implements Display, KeyListener, MouseListener, MouseW
         canvas.addMouseListener(this);
         canvas.addMouseWheelListener(this);
         
-        // Create frame
+       //  Create frame
         frame = new JFrame();
         frame.setFocusable(false);
         frame.setFocusTraversalKeysEnabled(false);
@@ -136,15 +136,15 @@ public class SwingDisplay implements Display, KeyListener, MouseListener, MouseW
             strategy = canvas.getBufferStrategy();
         }
         
-        // Recreate graphic context
+       //  Recreate graphic context
         graphics = (Graphics2D)strategy.getDrawGraphics();
         
-        // Get current size
+       // Get current size
         int width = canvas.getWidth();
         int height = canvas.getHeight();
         box = new Box(Vector.ZERO, new Vector(width, height));
 
-        // Clear background
+       //  Clear background
         graphics.setColor(canvas.getBackground());
         graphics.fillRect(0, 0, width, height);
 
@@ -181,14 +181,14 @@ public class SwingDisplay implements Display, KeyListener, MouseListener, MouseW
         time += deltaTime;
         before = now;
         
-        // Update focus
+       //  Update focus
         focus = focus.updated(canvas.hasFocus());
     }
     
     @Override
     public void end() {
 
-        // Dispose context
+       //  Dispose context
         graphics.dispose();
         graphics = null;
         box = null;
@@ -231,7 +231,7 @@ public class SwingDisplay implements Display, KeyListener, MouseListener, MouseW
         // Center sprite at origin
         AffineTransform center = AffineTransform.getTranslateInstance(sprite.getWidth() / -2.0, sprite.getHeight() / -2.0);
         
-        // Rescale sprite according to box (images have inverted Y-axis)
+      //   Rescale sprite according to box (images have inverted Y-axis)
         AffineTransform scale = AffineTransform.getScaleInstance(location.getWidth() / sprite.getWidth(), -location.getHeight() / sprite.getHeight());
         
         // Rotate sprite
@@ -240,13 +240,13 @@ public class SwingDisplay implements Display, KeyListener, MouseListener, MouseW
         // Move to desired location
         AffineTransform move = AffineTransform.getTranslateInstance(location.getCenter().getX(), location.getCenter().getY());
         
-        // Combine everything
+        /// Combine everything
         AffineTransform transform = move;
         transform.concatenate(rotate);
         transform.concatenate(scale);
         transform.concatenate(center);
         
-        // Draw image with alpha modifier
+       //  Draw image with alpha modifier
         if (transparency < 1.0) {
             Composite original = graphics.getComposite();
             AlphaComposite composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)transparency);

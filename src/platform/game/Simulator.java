@@ -31,6 +31,9 @@ public class Simulator implements World{
     private double expectedRadius = 10.0;
     private SortedCollection<Actor> actors;
     private List<Actor> registered, unregistered;
+    private Level next;
+    private boolean transition = false;
+    private Level currentLevel;
    
     
     /**
@@ -47,17 +50,11 @@ public class Simulator implements World{
         registered=new ArrayList<Actor>();
         unregistered=new ArrayList<Actor>();
         actors = new SortedCollection<Actor>();
-        Block b = new Block(-4,-1,4,0);
-        actors.add(b);
-        Fireball f = new Fireball(3,2,-3,5);
-        f.register(this);
-        Player p = new Player(2,3,0,-1);
-        p.register(this);
-        actors.add(p);
-        actors.add(f);
+        currentLevel = Level.createDefaultLevel();
+        currentLevel.register(this);
 	}
 	
-    //Simulate before the physical actions from actors
+   // Simulate before the physical actions from actors
 	public void preUpdate(Input input, Output output) {
 		for (Actor a : actors) {
 			a.preUpdate(input);
@@ -75,12 +72,9 @@ public class Simulator implements World{
      * @param output output object to use, not null
      */
 	public void update(Input input, Output output) {
-		double factor = 0.0001;
-		currentCenter = currentCenter.mul(1.0 - factor).add(expectedCenter.mul(factor));
-		currentRadius = currentRadius * (1.0 - factor) + expectedRadius * factor;
+
 		View view = new View (input, output);
-		view.setTarget(currentCenter, currentRadius);
-		
+		view.setTarget(expectedCenter, currentRadius);
 		preUpdate(input,output);
 		
 		for(Actor actor : actors) {
@@ -88,7 +82,7 @@ public class Simulator implements World{
 				if (actor.getPriority()>other.getPriority()) actor.interact(other);
 			}
 		}
-		// Add registered actors
+	//	 Add registered actors
 		for (int i =0; i<registered.size();i++) {
 			Actor actor = registered.get(i);
 			actor.register(this);
@@ -111,10 +105,23 @@ public class Simulator implements World{
 		for (int i=0; i<unregistered.size();i++) {
 			Actor actor = unregistered.get(i);
 			actors.remove(actor);
-			//retrait de son attribut world
+		//	retrait de son attribut world
 			actor.unregister(this);
 		}
 		unregistered.clear();
+		
+		if(transition) {
+		    if (next==null) {
+		        next=Level.createDefaultLevel();
+		    }
+		    Level level = next;
+		    transition=false;
+		    next=null;
+		    actors.clear();
+		    registered.clear();
+		    unregistered.clear();
+		    register(level);
+		}
 	}
 	
 	/** @Override*/
@@ -139,12 +146,21 @@ public class Simulator implements World{
     
     @Override 
     public void register(Actor actor) {
+    actor.register(this);
     	registered.add(actor);
     }
     
     @Override 
     public void unregister(Actor actor) {
     	unregistered.add(actor);
+    }
+    
+    public void setNextLevel(Level level) {
+        this.next=level;
+    }
+    
+    public void nextLevel() {
+        transition=true;
     }
 
     

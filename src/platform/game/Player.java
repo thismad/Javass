@@ -14,25 +14,32 @@ public class Player extends Actor{
 	private Vector velocity;
 	private final double SIZE = 0.7;
 	private boolean colliding;
+	private final double maxHealth = 5;
+	private double health;
 	
 	public Player (double a, double b, double c, double d) {
-		super("blocker.happy");
 		Vector pos = new Vector(a,b);
 		Vector vel = new Vector(c,d);
 		position=pos;
 		velocity=vel;
+		health=maxHealth;
+		
 	}
 	
 	public int getPriority() {
-		return 1000;
+		return 50;
 	}
 
 	public boolean isSolid() {
-		return true;
+		return true; 
 	}
 
 	public Box getBox() {
 		return new Box(position, SIZE, SIZE);
+	}
+	
+	public void setHealth(double h) {
+	    this.health=health + h;
 	}
 	
 	public void preUpdate(Input input) {
@@ -42,9 +49,9 @@ public class Player extends Actor{
 	
 	public void postUpdate(Input input, Output output) {
 		super.postUpdate(input, output);
-		View view = new View(input,output);
-		view.setTarget(position, 8);
+		getWorld().setView(position, 8);
 	}
+
 	
 //********************************************************************** DEBUT UPDATE
 	public void update(Input input) {
@@ -84,12 +91,27 @@ public class Player extends Actor{
 		double delta = input.getDeltaTime();
 		velocity = velocity.add(getWorld().getGravity().mul(delta));
 		position = position.add(velocity.mul(delta));
+		
+		if(input.getKeyboardButton(KeyEvent.VK_SPACE).isPressed()) {
+		    Vector v = velocity.add(velocity.resized(2));
+		    Fireball f = new Fireball(position,v,this);
+		    getWorld().register(f);;
+		}
 	}
-// ********************************************************************** FIN UPDATE
+ //********************************************************************** FIN UPDATE
 
 	public void draw(Input input,Output output) {
 		super.draw(input, output);
-		output.drawSprite(getSprite(), getBox());
+		output.drawSprite(getWorld().getLoader().getSprite("blocker.happy"), getBox());
+	}
+	
+	public boolean hurt(Actor instigator, Damage type, double amount, Vector location) {
+	    switch(type){
+	    case FIRE : setHealth(-amount);
+	    case AIR : velocity = getPosition().sub(position).resized(amount);
+	    return true;
+	    default : return false;
+	    }
 	}
 
 	public void interact(Actor other) {
